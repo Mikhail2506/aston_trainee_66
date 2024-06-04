@@ -16,6 +16,7 @@ package org.example;
  * @param <T> This describes using type of parameter
  */
 public class CustomArrayList<T> {
+
     private T[] internalArray;
     private int size;
     private static final int DEFAULT_CAPACITY = 10;
@@ -71,10 +72,12 @@ public class CustomArrayList<T> {
      */
     public boolean contains(T lookingForElement) {
         boolean flag = false;
-        for (T element : internalArray) {
-            if (element.equals(lookingForElement)) {
-                flag = true;
-                break;
+        if (!isCustomArrayListEmpty()) {
+            for (T element : internalArray) {
+                if (element.equals(lookingForElement)) {
+                    flag = true;
+                    break;
+                }
             }
         }
         return flag;
@@ -101,8 +104,11 @@ public class CustomArrayList<T> {
      * @return Returning type of the element to be got.
      */
     public T get(int index) {
-        checkIndex(index);
-        return internalArray[index];
+        if (checkIndex(index)) {
+            return internalArray[index];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -121,15 +127,42 @@ public class CustomArrayList<T> {
 
     /**
      * Inserts the specified element at the specified position in this list.
+     * Empty indexes are not allowed
      * In case the size of the list is not enough increases it.
      * @param index Position of the element to be added.
      * @param element The element to be added.
      */
     public void add(int index, T element) {
-        if (this.size() == internalArray.length) {
-            resize();
+        if (checkIndex(index)) {
+            Object[] tempArray;
+            if (index == 0 && this.size == 0) {
+                internalArray[0] = element;
+            } else if (index < internalArray.length) {
+                tempArray = (T[]) new Object[internalArray.length + 1];
+                for (int i = 0; i < index; i++) {
+                    tempArray[i] = internalArray[i];
+                }
+                tempArray[index] = element;
+                for (int i = index; i < internalArray.length; i++) {
+                    tempArray[i + 1] = internalArray[i];
+                }
+                internalArray = (T[]) tempArray;
+            } else if (index == this.size) {
+                internalArray[index] = element;
+            } else {
+                resize();
+                tempArray = (T[]) new Object[internalArray.length + 1];
+                for (int i = 0; i < index; i++) {
+                    tempArray[i] = internalArray[i];
+                }
+                tempArray[index] = element;
+                for (int i = index; i < internalArray.length; i++) {
+                    tempArray[i + 1] = internalArray[i];
+                }
+                internalArray = (T[]) tempArray;
+            }
+
         }
-        internalArray[size++] = element;
     }
 
     /**
@@ -169,12 +202,13 @@ public class CustomArrayList<T> {
             tempArray[i] = internalArray[i];
         }
         internalArray = (T[]) tempArray;
-        System.out.println(size);
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + "doesn't exist in Your CustomArrayList!");
+    private boolean checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index " + index + " doesn't exist in Your CustomArrayList!");
+        } else {
+            return true;
         }
     }
 }

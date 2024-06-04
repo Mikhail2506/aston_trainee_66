@@ -10,7 +10,6 @@ import java.util.Comparator;
  * @author Mikhail Toukach
  * @version 1.0
  * @since 2024-06-02
- * @param <T> This describes using type of parameter, need to be extended interface comparable
  */
 public class QuickSort {
     /**
