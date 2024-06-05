@@ -17,15 +17,15 @@ public class QuickSort {
      * @param list CustomArrayList to be sorted.
      * @param <T> Type of elements of the sorted list, need to extend Comparable.
      */
-    public static <T extends Comparable<T>> void quickSort(CustomArrayList<T> list) {
-        quickSort(list, 0, list.size() - 1);
+    public static <T extends Comparable<T>> void quickSortComparable(CustomArrayList<T> list) {
+        quickSortComparable(list, 0, list.size() - 1);
     }
 
-    private static <T extends Comparable<T>> void quickSort(CustomArrayList<T> list, int left, int right) {
+    private static <T extends Comparable<T>> void quickSortComparable(CustomArrayList<T> list, int left, int right) {
         if (left < right) {
             int pivotIndex = partition(list, left, right);
-            quickSort(list, left, pivotIndex - 1);
-            quickSort(list, pivotIndex + 1, right);
+            quickSortComparable(list, left, pivotIndex - 1);
+            quickSortComparable(list, pivotIndex + 1, right);
         }
     }
 
@@ -45,31 +45,31 @@ public class QuickSort {
     /**
      * QuickSort method using Comparator.
      * @param list List of sorting elements.
-     * @param comparator
-     * @param <T>
+     * @param comparator Custom realization for comparing rule
+     * @param <T> Type of parameters in CustomArrayList
      */
-    public static <T> void quickSort(CustomArrayList<T> list, Comparator<T> comparator) {
-        quickSort(list, comparator, 0, list.size() - 1);
+    public static <T> void quickSortComparator(CustomArrayList<T> list, Comparator<T> comparator) {
+        quickSortComparator(list, comparator, 0, list.size() - 1);
     }
 
-    private static <T> void quickSort(CustomArrayList<T> list, Comparator<T> comparator, int left, int right) {
+    private static <T> void quickSortComparator(CustomArrayList<T> list, Comparator<T> comparator, int left, int right) {
         if (left < right) {
             int pivotIndex = partition(list, comparator, left, right);
-            quickSort(list, comparator, left, pivotIndex - 1);
-            quickSort(list, comparator, pivotIndex + 1, right);
+            quickSortComparator(list, comparator, left, pivotIndex - 1);
+            quickSortComparator(list, comparator, pivotIndex + 1, right);
         }
     }
 
-    private static <T> int partition(CustomArrayList<T> list, Comparator<T> comparator, int left, int right) {
-        T pivot = list.get(right);
+    private static <T> int partition(CustomArrayList<T> list2, Comparator<T> comparator, int left, int right) {
+        T pivot = list2.get(right);
         int i = left - 1;
         for (int j = left; j < right; j++) {
-            if (comparator.compare(list.get(j), pivot) < 0) {
+            if (comparator.compare(list2.get(j), pivot) < 0) {
                 i++;
-                swap(list, i, j);
+                swap(list2, i, j);
             }
         }
-        swap(list, i + 1, right);
+        swap(list2, i + 1, right);
         return i + 1;
     }
 
