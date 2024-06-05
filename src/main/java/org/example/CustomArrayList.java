@@ -134,35 +134,38 @@ public class CustomArrayList<T> {
      */
     public void add(int index, T element) {
         if (checkIndex(index)) {
-            Object[] tempArray;
-            if (index == 0 && this.size == 0) {
+            T[] tempArray;
+            if (this.size == 0) {
                 internalArray[0] = element;
-            } else if (index < internalArray.length) {
-                tempArray = (T[]) new Object[internalArray.length + 1];
+            } else if (index < size) {
+                tempArray = (T[]) new Object[internalArray.length];
                 for (int i = 0; i < index; i++) {
                     tempArray[i] = internalArray[i];
                 }
                 tempArray[index] = element;
-                for (int i = index; i < internalArray.length; i++) {
-                    tempArray[i + 1] = internalArray[i];
+                for (int i = index + 1; i < size; i++) {
+                    tempArray[i] = internalArray[i - 1];
                 }
                 internalArray = (T[]) tempArray;
-            } else if (index == this.size) {
+            } else if (index == this.size && internalArray.length != this.size) {
                 internalArray[index] = element;
-            } else {
+            } else if (internalArray.length == this.size) {
                 resize();
                 tempArray = (T[]) new Object[internalArray.length + 1];
                 for (int i = 0; i < index; i++) {
                     tempArray[i] = internalArray[i];
                 }
                 tempArray[index] = element;
-                for (int i = index; i < internalArray.length; i++) {
+                for (int i = index; i < internalArray.length - 1; i++) {
                     tempArray[i + 1] = internalArray[i];
                 }
                 internalArray = (T[]) tempArray;
             }
-
+        } else {
+            resize();
+            internalArray[index] = element;
         }
+        size++;
     }
 
     /**
@@ -173,9 +176,12 @@ public class CustomArrayList<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = internalArray[index];
-        for (int i = index + 1; i < size; i++) {
-            internalArray[i - 1] = internalArray[i];
+        T[] tempArray = internalArray;
+        for (int i = index; i < size; i++) {
+            tempArray[i] = internalArray[i - 1];
         }
+        internalArray[index] = null;
+        internalArray = tempArray;
         size--;
         return removedElement;
     }
@@ -195,6 +201,19 @@ public class CustomArrayList<T> {
         return strBuilder.toString();
     }
 
+    /**
+     * Convert Custom ArrayList to Array with defined not NULL values.
+     * @return The Array representation of the CustomArrayList.
+     */
+    public T[] toArray() {
+        int n = this.size();
+        T[] customListToArray = (T[]) new Object[n];
+        for (int i = 0; i < n; i++) {
+            customListToArray[i] = this.get(i);
+        }
+        return customListToArray;
+    }
+
     private void resize() {
         int newSize = this.size() * 3 / 2 + 1;
         Object[] tempArray = (T[]) new Object[newSize];
@@ -206,7 +225,7 @@ public class CustomArrayList<T> {
 
     private boolean checkIndex(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " doesn't exist in Your CustomArrayList!");
+            throw new IndexOutOfBoundsException("Value with Index " + index + " doesn't exist in Your CustomArrayList!");
         } else {
             return true;
         }
