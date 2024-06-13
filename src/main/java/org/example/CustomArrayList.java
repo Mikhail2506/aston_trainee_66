@@ -1,5 +1,8 @@
 package org.example;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * Class CustomArrayList is a custom implementation of a Dynamic array.
  * Resizable-array implementation of the common ArrayList class methods.
@@ -228,5 +231,18 @@ public class CustomArrayList<T> {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomArrayList<?> that = (CustomArrayList<?>) o;
+        return size == that.size && Objects.deepEquals(internalArray, that.internalArray);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.hashCode(internalArray), size);
     }
 }
